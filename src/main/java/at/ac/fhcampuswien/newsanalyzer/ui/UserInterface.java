@@ -11,21 +11,34 @@ public class UserInterface
 {
 	private Controller ctrl = new Controller();
 
+
 	public void getDataFromCtrl1(){
 		System.out.println("ABC");
-
+		System.out.println("Your chosen filters: language: en, sourceCountry: us, Q: corona, Endpoint: top headlines, Category: health");
+		ctrl.choice=1;
 		ctrl.process();
 	}
 
 	public void getDataFromCtrl2(){
+		System.out.println("DEF");
+		System.out.println("Your chosen filters: language: de, sourceCountry: de, Endpoint: top headlines, Category: health");
+		ctrl.choice=2;
+		ctrl.process();
 		// TODO implement me
 	}
 
 	public void getDataFromCtrl3(){
+		System.out.println("3");
+		System.out.println("Your chosen filters: language: en, sourceCountry: ua, Endpoint: everything, Category: business, From: 2020-01-12, To: 2021-06-15");
+		ctrl.choice=3;
+		ctrl.process();
 		// TODO implement me
 	}
 	
 	public void getDataForCustomInput() {
+		System.out.println("User Input");
+		ctrl.choice=4;
+		ctrl.process();
 		// TODO implement me
 	}
 

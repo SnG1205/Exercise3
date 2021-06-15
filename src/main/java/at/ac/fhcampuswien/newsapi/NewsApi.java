@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.newsapi;
 
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import at.ac.fhcampuswien.newsapi.beans.NewsResponse;
@@ -10,6 +11,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 
 
 public class NewsApi {
@@ -121,8 +123,7 @@ public class NewsApi {
         try {
             obj = new URL(url);
         } catch (MalformedURLException e) {
-            // TODO improve ErrorHandling
-            e.printStackTrace();
+            System.out.println("Check whether all the filters are written correctly. Invalid URL is given");
         }
         HttpURLConnection con;
         StringBuilder response = new StringBuilder();
@@ -135,53 +136,77 @@ public class NewsApi {
             }
             in.close();
         } catch (IOException e) {
-            // TODO improve ErrorHandling
+            if(e.toString().toLowerCase().contains("426")){
+                System.out.println("'From' date must be newer than 2021-05-13");
+            }
+
+            else if(e.toString().toLowerCase().contains("400")){
+                System.out.println("The country param is not currently supported on the /everything endpoint. Please change it to /top_headlines");
+            }
+            else if(e.toString().toLowerCase().contains("401")){
+                System.out.println("ApiKey is not Valid");
+            }
             System.out.println("Error "+e.getMessage());
+            // TODO improve ErrorHandling
+        }
+        catch (NullPointerException e){
+
         }
         return response.toString();
     }
 
     protected String buildURL() {
-        // TODO ErrorHandling
-        String urlbase = String.format(NEWS_API_URL,getEndpoint().getValue(),getQ(),getApiKey());
-        StringBuilder sb = new StringBuilder(urlbase);
+        try{
+            String urlbase = String.format(NEWS_API_URL, getEndpoint().getValue(), getQ(), getApiKey());
 
-        System.out.println(urlbase);
+            if(getQ()==null){
+                System.out.println("Please, add Q Filter to your search!");
+            }
+            StringBuilder sb = new StringBuilder(urlbase);
 
-        if(getFrom() != null){
-            sb.append(DELIMITER).append("from=").append(getFrom());
+            System.out.println(urlbase);
+
+            if (getFrom() != null) {
+                sb.append(DELIMITER).append("from=").append(getFrom());
+            }
+            if (getTo() != null) {
+                sb.append(DELIMITER).append("to=").append(getTo());
+            }
+            if (getPage() != null) {
+                sb.append(DELIMITER).append("page=").append(getPage());
+            }
+            if (getPageSize() != null) {
+                sb.append(DELIMITER).append("pageSize=").append(getPageSize());
+            }
+            if (getLanguage() != null) {
+                sb.append(DELIMITER).append("language=").append(getLanguage());
+            }
+            if (getSourceCountry() != null) {
+                sb.append(DELIMITER).append("country=").append(getSourceCountry());
+            }
+            if (getSourceCategory() != null) {
+                sb.append(DELIMITER).append("category=").append(getSourceCategory());
+            }
+            if (getDomains() != null) {
+                sb.append(DELIMITER).append("domains=").append(getDomains());
+            }
+            if (getExcludeDomains() != null) {
+                sb.append(DELIMITER).append("excludeDomains=").append(getExcludeDomains());
+            }
+            if (getqInTitle() != null) {
+                sb.append(DELIMITER).append("qInTitle=").append(getqInTitle());
+            }
+            if (getSortBy() != null) {
+                sb.append(DELIMITER).append("sortBy=").append(getSortBy());
+            }
+            return sb.toString();
         }
-        if(getTo() != null){
-            sb.append(DELIMITER).append("to=").append(getTo());
+        catch (NullPointerException e){
+            return '\n'+"Please set an Endpoint";
         }
-        if(getPage() != null){
-            sb.append(DELIMITER).append("page=").append(getPage());
-        }
-        if(getPageSize() != null){
-            sb.append(DELIMITER).append("pageSize=").append(getPageSize());
-        }
-        if(getLanguage() != null){
-            sb.append(DELIMITER).append("language=").append(getLanguage());
-        }
-        if(getSourceCountry() != null){
-            sb.append(DELIMITER).append("country=").append(getSourceCountry());
-        }
-        if(getSourceCategory() != null){
-            sb.append(DELIMITER).append("category=").append(getSourceCategory());
-        }
-        if(getDomains() != null){
-            sb.append(DELIMITER).append("domains=").append(getDomains());
-        }
-        if(getExcludeDomains() != null){
-            sb.append(DELIMITER).append("excludeDomains=").append(getExcludeDomains());
-        }
-        if(getqInTitle() != null){
-            sb.append(DELIMITER).append("qInTitle=").append(getqInTitle());
-        }
-        if(getSortBy() != null){
-            sb.append(DELIMITER).append("sortBy=").append(getSortBy());
-        }
-        return sb.toString();
+
+
+
     }
 
     public NewsResponse getNews() {
