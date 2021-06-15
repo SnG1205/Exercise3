@@ -220,27 +220,8 @@ public class Controller {
 
 		//TODO implement methods for analysis
 
-		for (Article article:articles){
-			try{
-				URL url=new URL(article.getUrl());
-				URLConnection uc;
-				uc=url.openConnection();
-				uc.addRequestProperty("User-Agent",
-						"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
-				InputStream is=url.openStream();
-				BufferedReader br=new BufferedReader(new InputStreamReader(is));
-				BufferedWriter wr = new BufferedWriter(new FileWriter(article.getTitle().substring(0,10)+".html"));
-				String line;
-				while ((line=br.readLine())!=null){
-					wr.write(line);
-				}
-				br.close();
-				wr.close();
-			}
-			catch (Exception e){
-				System.err.println("Failed to save webpage: "+ e.getMessage());
-			}
-		}
+
+
 		System.out.println("End process");
 	}
 
